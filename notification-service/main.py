@@ -2,8 +2,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, EmailStr
 
-app = FastAPI(title="Notification Service")
+app = FastAPI(root_path="/notifications")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class Notification(BaseModel):
     recipient: EmailStr
     message: str

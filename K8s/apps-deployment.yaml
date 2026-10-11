@@ -1,0 +1,174 @@
+# ==========================================
+# 1. Auth Service
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: auth-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-service
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+# ==========================================
+# 2. Signup Service
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signup-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signup-service
+  template:
+    metadata:
+      labels:
+        app: signup-service
+    spec:
+      containers:
+      - name: signup-service
+        image: signup-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: signup-service
+spec:
+  selector:
+    app: signup-service
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+# ==========================================
+# 3. Product Service
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+      - name: product-service
+        image: product-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+# ==========================================
+# 4. Profile Service
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+    spec:
+      containers:
+      - name: profile-service
+        image: profile-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-service
+spec:
+  selector:
+    app: profile-service
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+# ==========================================
+# 5. Notification Service
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+      - name: notification-service
+        image: notification-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+  - port: 8000
+    targetPort: 8000

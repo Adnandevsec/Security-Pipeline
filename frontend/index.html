@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Security Pipeline</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; direction: rtl; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        .card { background: #fafafa; border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #272822; color: #f8f8f2; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🚀 بوابة اختبار الميكروسيرفيسز (Microservices Gateway)</h2>
+    
+    <!-- قسم تسجيل الدخول -->
+    <div class="card">
+        <h3>1. تسجيل الدخول (Auth Service)</h3>
+        <input type="text" id="username" placeholder="اسم المستخدم أو الإيميل" value="test@example.com">
+        <input type="password" id="password" placeholder="كلمة المرور" value="password123">
+        <button onclick="login()">تسجيل الدخول</button>
+    </div>
+
+    <!-- قسم الخدمات -->
+    <div class="card">
+        <h3>2. اختبار بقية الخدمات عبر Gateway</h3>
+        <button onclick="fetchData('products')">جلب المنتجات (Products)</button>
+        <button onclick="fetchData('profile')">جلب الملف الشخصي (Profile)</button>
+        <button onclick="fetchData('notifications')">جلب الإشعارات (Notifications)</button>
+    </div>
+
+    <!-- قسم النتائج -->
+    <div class="card">
+        <h3>📋 مخرجات الاستجابة (Response):</h3>
+        <pre id="output">اضغط على أي زر لرؤية النتيجة هنا...</pre>
+    </div>
+</div>
+
+<script>
+    let token = "";
+
+   async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const output = document.getElementById('output');
+
+        try {
+            const response = await fetch('http://localhost/auth/api/v1/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: username, password: password })
+            });
+            const data = await response.json();
+            if(response.ok) {
+                token = data.access_token || "";
+                output.textContent = JSON.stringify(data, null, 2);
+            } else {
+                output.textContent = "خطأ في تسجيل الدخول: " + JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
+            output.textContent = "خطأ الاتصال بالخادم: " + error.message;
+        }
+    }
+
+    async function fetchData(service) {
+        const output = document.getElementById('output');
+        try {
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            const response = await fetch(`http://localhost/${service}/`, {
+                method: 'GET',
+                headers: headers
+            });
+            const data = await response.json();
+            output.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+            output.textContent = `خطأ في جلب بيانات ${service}: ` + error.message;
+        }
+    }
+</script>
+
+</body>
+</html>

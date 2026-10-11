@@ -1,0 +1,93 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8001:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  signup-service:
+    build: ./signup-service
+    container_name: signup-service
+    ports:
+      - "8002:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "8003:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  profile-service:
+    build: ./profile-service
+    container_name: profile-service
+    ports:
+      - "8004:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8005:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  gateway:
+    build: "./API Gateway"
+    container_name: gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - signup-service
+      - product-service
+      - profile-service
+      - notification-service
+    networks:
+      - app-network
+      
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

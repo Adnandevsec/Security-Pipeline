@@ -5,8 +5,16 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
 import os
 
-app = FastAPI(title="Signup Service")
+app = FastAPI(root_path="/signup")
+from fastapi.middleware.cors import CORSMiddleware
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Database connection from environment variable (Kubernetes config)
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://mongodb:27017")
 client = AsyncIOMotorClient(MONGO_URL)

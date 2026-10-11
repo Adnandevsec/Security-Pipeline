@@ -4,7 +4,16 @@ from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
-app = FastAPI(title="Product Service")
+app = FastAPI(root_path="/products")
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://mongodb:27017")
 client = AsyncIOMotorClient(MONGO_URL)

@@ -6,8 +6,17 @@ from passlib.context import CryptContext
 import jwt
 import os
 
-app = FastAPI(title="Auth Service")
+app = FastAPI(root_path="/auth")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://mongodb:27017")
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
 client = AsyncIOMotorClient(MONGO_URL)
